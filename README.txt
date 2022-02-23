@@ -1,1 +1,1 @@
-This is a test
+The purpose of this program is to detect customer churn using a machine learning model
