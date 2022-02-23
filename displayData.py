@@ -9,6 +9,7 @@ st.set_page_config( page_title="Churn Detection Modeling",
 df = pd.read_csv('combined.csv')
 
 st.header("Combined data set:")
+st.selectbox("Charts", ["Churn model", "Churn factors"])
 st.dataframe(df)
 
 # SIDEBAR
