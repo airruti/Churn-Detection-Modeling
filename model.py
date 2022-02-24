@@ -21,7 +21,7 @@ combined_df['region'].loc[combined_df['Account Currency'] == 'NZD'] = "AU"
 combined_df['region'].loc[combined_df['Account Currency'] == 'ZAR'] = "SA"
 
 #Drop repeating columns/stuff we don't need
-drop = ["placeholder", "Account Currency" "account_id", "Row Labels"]
+drop = ["placeholder", "Account Currency", "account_id", "Row Labels"]
 combined_df.drop(columns=drop, inplace=True)
 
 
