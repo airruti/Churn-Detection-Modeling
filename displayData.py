@@ -7,14 +7,8 @@ st.set_page_config( page_title="Churn Detection Modeling",
                     page_icon=":bar_chart:",
                     layout="wide")
 
-df = pd.read_csv('combined.csv')
-
+df = pd.read_csv('combined.csv', nrows=1000)
 df.drop(columns="Unnamed: 0", inplace=True)
-
-st.header("Combined data set:")
-st.selectbox("Charts", ["Churn model", "Churn factors"])
-st.dataframe(df)
-st.bar_chart(df['Churn'].value_counts())
 
 # SIDEBAR
 st.sidebar.header("Filters:")
@@ -29,7 +23,14 @@ ownerType = st.sidebar.multiselect(
     options=df['Owner AMA / AUM'].unique(),
     default=df['Owner AMA / AUM'].unique()
 )
-
-df_selection = df.query(
-    "region == @region"
+df = df.query(
+    "region == @region & `Owner AMA / AUM` == @ownerType"
 )
+# main body
+st.header("Combined data set:")
+st.selectbox("Charts", ["Churn model", "Churn factors"])
+st.dataframe(df)
+st.bar_chart(df['Churn'].value_counts())
+
+
+
