@@ -30,7 +30,22 @@ df = df.query(
 st.header("Combined data set:")
 st.selectbox("Charts", ["Churn model", "Churn factors"])
 st.dataframe(df)
-st.bar_chart(df['Churn'].value_counts())
+chart_data = df['Churn'].value_counts()
+#st.bar_chart(chart_data)
+column_names = ['Churn Categories', 'Number of Customers Churned']
+df2 = pd.DataFrame(columns = column_names)
+df2 = df2.append({'Churn Categories': 'Churn_No', 'Number of Customers Churned': chart_data[0]}, ignore_index=True)
+df2 = df2.append({'Churn Categories': 'Churn_Yes', 'Number of Customers Churned': chart_data[1]}, ignore_index=True)
+c = alt.Chart(df2).mark_bar().encode(
+    alt.X('Churn Categories'),
+    alt.Y('Number of Customers Churned'),
+    alt.Color('Churn Categories'),
+    alt.OpacityValue(0.7),
+    tooltip = [alt.Tooltip('Churn Categories'),
+               alt.Tooltip('Number of Customers Churned')]
+).interactive()
+st.altair_chart(c, use_container_width=True)
+
 
 
 
