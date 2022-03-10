@@ -1,4 +1,4 @@
-Row Labels,Min of Effective_Start_Date__c,Max of Effective_End_Date__c,Max of Effective_Start_Date__c,Current State,placeholder,Duration
+Row Labels,Min of Effective_Start_Date__c,Max of Effective_End_Date__c,Max of Effective_Start_Date__c,Current State,1 -> Renewable 0 -> Evergreen,Duration
 0013a00001a0004AAA,7/2/2019,7/1/2022,7/2/2019,Renewable,1,1095
 0013a00001a0009AAA,10/1/2018,,10/1/2018,Evergreen,0,1228
 0013a00001a000OAAQ,1/31/2017,12/29/2023,1/30/2022,Renewable,1,2523
