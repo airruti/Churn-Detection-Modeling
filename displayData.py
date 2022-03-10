@@ -45,7 +45,3 @@ c = alt.Chart(df2).mark_bar().encode(
                alt.Tooltip('Number of Customers Churned')]
 ).interactive()
 st.altair_chart(c, use_container_width=True)
-
-
-
-
