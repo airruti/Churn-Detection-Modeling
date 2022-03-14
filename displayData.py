@@ -8,7 +8,7 @@ st.set_page_config( page_title="Churn Detection Modeling",
                     layout="wide")
 
 df = pd.read_csv('combined.csv', nrows=1000)
-df.drop(columns="Unnamed: 0", inplace=True)
+#df.drop(columns="Unnamed: 0", inplace=True)
 
 # SIDEBAR
 st.sidebar.header("Filters:")

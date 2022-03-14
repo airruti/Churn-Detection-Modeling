@@ -9,7 +9,7 @@ data = pd.read_csv("combined.csv")
 y=data["Churn"]
 x = data.drop(columns= "Churn")
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = .8)
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = .7)
 
 model = LogisticRegression()
 
