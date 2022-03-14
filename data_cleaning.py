@@ -22,6 +22,8 @@ combined_df['region'].loc[combined_df['Account Currency'] == 'NZD'] = "AU"
 combined_df['region'].loc[combined_df['Account Currency'] == 'ZAR'] = "SA"
 
 #Drop repeating columns/stuff we don't need
+combined_df.to_csv("display.csv")
+
 drop = ["Account ID", "JUNO Account ID", "Current State", "created_at", "Last Activity", "Last Modified Date", "closed_at", "Min of Effective_Start_Date__c", "Owner AMA / AUM", "Max of Effective_End_Date__c", "Account Currency", "account_id", "account_user_id", "Row Labels", "Full Account ID", "Max of Effective_Start_Date__c", "min_IO_seats_required", "Full User ID", "Account Record Type", "Type"]
 combined_df.drop(columns=drop, inplace=True)
 
