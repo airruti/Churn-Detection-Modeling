@@ -22,7 +22,6 @@ combined_df.to_csv("display.csv")
 """
 Calculate Churn within Python
 Data cleaning
-Add dates to Churn for future dates 
 """
 
 #Drop repeating columns/stuff we don't need
