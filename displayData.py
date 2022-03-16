@@ -1,6 +1,10 @@
 import pandas as pd
 import streamlit as st
 import altair as alt
+from model import logisticReg
+import seaborn as sns
+from matplotlib import pyplot as plt
+
 
 # streamlit run displayData.py 
 st.set_page_config( page_title="Churn Detection Modeling",
@@ -36,6 +40,7 @@ column_names = ['Churn Categories', 'Number of Customers Churned']
 df2 = pd.DataFrame(columns = column_names)
 df2 = df2.append({'Churn Categories': 'Churn_No', 'Number of Customers Churned': chart_data[0]}, ignore_index=True)
 df2 = df2.append({'Churn Categories': 'Churn_Yes', 'Number of Customers Churned': chart_data[1]}, ignore_index=True)
+print(df2)
 c = alt.Chart(df2).mark_bar().encode(
     alt.X('Churn Categories'),
     alt.Y('Number of Customers Churned'),
@@ -45,3 +50,18 @@ c = alt.Chart(df2).mark_bar().encode(
                alt.Tooltip('Number of Customers Churned')]
 ).interactive()
 st.altair_chart(c, use_container_width=True)
+
+df3 = logisticReg("combined.csv")
+fig = plt.figure(figsize=(25, 9))
+ax = sns.heatmap(df3, annot=True)
+ax.set_title('Heat map of correlations of variables')
+st.pyplot(fig)
+
+# For reference for interactive heatmap
+# heatmap = alt.Chart(df3).mark_rect().encode(
+#      alt.X('Var1:O', title = ''),
+#      alt.Y('Var2:O', title = '', axis=alt.Axis(labelAngle=0)),
+#      alt.Color('Corr:Q',
+#                  scale=alt.Scale(scheme='viridis'))
+# ).properties(title='Heat map of correlations of variables')
+# st.altair_chart(heatmap, use_container_width=True)
