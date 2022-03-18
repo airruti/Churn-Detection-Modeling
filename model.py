@@ -34,5 +34,3 @@ def logisticReg(file):
     print(confusion_matrix(y_test, y_prediction))
     df3 = pd.DataFrame(confusion_matrix(y_test, y_prediction))
     return df3
-
-logisticReg("combined.csv")
