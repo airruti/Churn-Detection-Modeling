@@ -2,60 +2,103 @@ import pandas as pd
 import streamlit as st
 import altair as alt
 from model import logisticReg
+from model import classReport
 import seaborn as sns
 from matplotlib import pyplot as plt
 
 
-# streamlit run displayData.py 
-st.set_page_config( page_title="Churn Detection Modeling",
-                    page_icon=":bar_chart:",
-                    layout="wide")
+# streamlit run displayData.py
+st.set_page_config(page_title="Churn Detection Modeling",
+                   page_icon=":bar_chart:",
+                   layout="wide")
 
 df = pd.read_csv('display.csv', nrows=1000)
 df.drop(columns="Unnamed: 0", inplace=True)
 
-# SIDEBAR
-st.sidebar.header("Filters:")
-region = st.sidebar.multiselect(
-    "Select the region:",
-    options=df['region'].unique(),
-    default=df['region'].unique()
-)
-st.sidebar.caption("The regions consists of North America(NAM), APAC(AU), and Europe(EU)")
-ownerType = st.sidebar.multiselect(
-    "Select the owner type:",
-    options=df['Owner AMA / AUM'].unique(),
-    default=df['Owner AMA / AUM'].unique()
-)
-df = df.query(
-    "region == @region & `Owner AMA / AUM` == @ownerType"
-)
+# # SIDEBAR
+# st.sidebar.header("Filters:")
+# region = st.sidebar.multiselect(
+#     "Select the region:",
+#     options=df['region'].unique(),
+#     default=df['region'].unique()
+# )
+# st.sidebar.caption("The regions consists of North America(NAM), APAC(AU), and Europe(EU)")
+# ownerType = st.sidebar.multiselect(
+#     "Select the owner type:",
+#     options=df['Owner AMA / AUM'].unique(),
+#     default=df['Owner AMA / AUM'].unique()
+# )
+# df = df.query(
+#     "region == @region & `Owner AMA / AUM` == @ownerType"
+# )
+
 # main body
-st.header("Combined data set:")
+st.header("Churn Detection Modeling")
 st.selectbox("Charts", ["Churn model", "Churn factors"])
 st.dataframe(df)
 chart_data = df['Churn'].value_counts()
-#st.bar_chart(chart_data)
+
+st.markdown('### Bar Graph')
 column_names = ['Churn Categories', 'Number of Customers Churned']
-df2 = pd.DataFrame(columns = column_names)
-df2 = df2.append({'Churn Categories': 'Churn_No', 'Number of Customers Churned': chart_data[0]}, ignore_index=True)
-df2 = df2.append({'Churn Categories': 'Churn_Yes', 'Number of Customers Churned': chart_data[1]}, ignore_index=True)
-print(df2)
+df2 = pd.DataFrame(columns=column_names)
+df2 = df2.append({'Churn Categories': 'Churn_No',
+                 'Number of Customers Churned': chart_data[0]}, ignore_index=True)
+df2 = df2.append({'Churn Categories': 'Churn_Yes',
+                 'Number of Customers Churned': chart_data[1]}, ignore_index=True)
 c = alt.Chart(df2).mark_bar().encode(
     alt.X('Churn Categories'),
     alt.Y('Number of Customers Churned'),
     alt.Color('Churn Categories'),
     alt.OpacityValue(0.7),
-    tooltip = [alt.Tooltip('Churn Categories'),
-               alt.Tooltip('Number of Customers Churned')]
-).interactive()
+    tooltip=[alt.Tooltip('Churn Categories'),
+             alt.Tooltip('Number of Customers Churned')]
+).interactive().properties(
+    width=1000,
+    height=700
+)
 st.altair_chart(c, use_container_width=True)
 
-df3 = logisticReg("combined.csv")
-fig = plt.figure(figsize=(25, 9))
-ax = sns.heatmap(df3, annot=True)
+st.markdown('### Scatter Plots')
+columns_scatter_x = st.multiselect("Columns for the X axis:", options=df.columns.values, default=None)
+columns_scatter_y = st.multiselect("Columns for the Y axis:", options=df.columns.values, default=None)
+if columns_scatter_x:
+    if columns_scatter_y:
+        for x_axis in columns_scatter_x:
+            for y_axis in columns_scatter_y:
+                fig = plt.figure(figsize=(20, 6))
+                ax = sns.scatterplot(x=df[x_axis], y=df[y_axis])
+                ax.set_title("Churn Relationship")
+                ax.set_ylabel(y_axis.capitalize())
+                ax.set_xlabel(x_axis.capitalize())
+                st.pyplot(fig)
+
+st.markdown('### Correlations heat map')
+corrMatrix = logisticReg("combined.csv")
+fig = plt.figure(figsize=(20, 6))
+ax = sns.heatmap(corrMatrix, annot=True)
 ax.set_title('Heat map of correlations of variables')
 st.pyplot(fig)
+
+st.markdown('### Logistic Regression Plots')
+binary_columns = [c for c in df.columns.values if sorted(list(df[c].value_counts().index)) == ([0, 1])]
+columns_regression_x = st.multiselect('Columns for the X axis: ', df.columns.values, default=None)
+columns_regression_y = st.multiselect('Columns for the Y axis: ', binary_columns, default=None)
+if columns_regression_x:
+    if columns_regression_y:
+        for x_axis in columns_regression_x:
+            for y_axis in columns_regression_y:
+                fig = plt.figure(figsize=(20, 6))
+                ax = sns.regplot(x=df[x_axis], y=df[y_axis], logistic=True, ci=0, line_kws={"color": "red"})
+                ax.set_title("Logistic Regression Plot")
+                ax.set_ylabel(y_axis.capitalize())
+                ax.set_xlabel(x_axis.capitalize())
+                st.pyplot(fig)
+
+st.markdown('### Classification Report')
+finalReport = classReport.get_report()
+st.dataframe(finalReport)             
+
+             
 
 # For reference for interactive heatmap
 # heatmap = alt.Chart(df3).mark_rect().encode(
