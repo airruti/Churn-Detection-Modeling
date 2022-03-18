@@ -16,7 +16,7 @@ account_currency_map = {'USD': 'NAM', 'CAD': 'NAM', 'EUR': 'EU', 'GBP': 'EU', 'A
 combined_df['Account Currency'] = combined_df['Account Currency'].map(account_currency_map)
 
 #csv for diplaydata for UI
-combined_df.to_csv("display.csv")
+combined_df.to_csv("display.csv", index=False)
 
 ##todo: 
 """
@@ -25,11 +25,11 @@ Data cleaning
 """
 
 #Drop repeating columns/stuff we don't need
-drop = ["Account ID", "Full User ID", "JUNO Account ID", "Row Labels", "Full Account ID",  "account_id", "account_user_id", "Current State", "created_at", "Last Activity", "Last Modified Date", "closed_at", "Min of Effective_Start_Date__c", "Owner AMA / AUM", "Max of Effective_End_Date__c", "Account Currency",  "Max of Effective_Start_Date__c", "min_IO_seats_required",  "Account Record Type", "Type"]
+drop = ["Account ID", "Full User ID", "JUNO Account ID", "Row Labels", "Full Account ID",  "account_id", "account_user_id", "Current State", "created_at", "Last Activity", "Last Modified Date", "closed_at", "Min of Effective_Start_Date__c", "Owner AMA / AUM", "Max of Effective_End_Date__c", "region",  "Max of Effective_Start_Date__c", "min_IO_seats_required",  "Account Record Type", "Type"]
 combined_df.drop(columns=drop, inplace=True)
 
 #make indicator variables
-combined_df = pd.get_dummies(combined_df, columns=["Kaseya Market Segment", "region"])
+combined_df = pd.get_dummies(combined_df, columns=["Kaseya Market Segment", "Account Currency"])
 
 #remove invalid durations due to faulty data
 combined_df = combined_df[combined_df['Duration'] != '#NUM!']
