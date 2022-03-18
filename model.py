@@ -28,9 +28,11 @@ def logisticReg(file):
     model.fit(x_train, y_train)
     y_prediction = model.predict(x_test)
     print(y_prediction)
+    print(classification_report(y_test, y_prediction, digits=6))
     report = pd.DataFrame(classification_report(y_test, y_prediction, digits=6, output_dict=True)).transpose()
-    print(report)
     classReport.set_report(report)
     print(confusion_matrix(y_test, y_prediction))
     df3 = pd.DataFrame(confusion_matrix(y_test, y_prediction))
     return df3
+
+logisticReg("combined.csv")
