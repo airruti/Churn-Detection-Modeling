@@ -2,7 +2,6 @@ import pandas as pd
 import streamlit as st
 import altair as alt
 from model import logisticReg
-from model import classReport
 import seaborn as sns
 from matplotlib import pyplot as plt
 
@@ -13,9 +12,9 @@ st.set_page_config(page_title="Churn Detection Modeling",
                    layout="wide")
 
 df = pd.read_csv('display.csv', nrows=1000)
-#df.drop(columns="Unnamed: 0", inplace=True)
+# df.drop(columns="Unnamed: 0", inplace=True)
 
-# # SIDEBAR
+# SIDEBAR
 # st.sidebar.header("Filters:")
 # region = st.sidebar.multiselect(
 #     "Select the region:",
@@ -31,6 +30,7 @@ df = pd.read_csv('display.csv', nrows=1000)
 # df = df.query(
 #     "region == @region & `Owner AMA / AUM` == @ownerType"
 # )
+
 
 # main body
 st.header("Churn Detection Modeling")
@@ -58,44 +58,45 @@ c = alt.Chart(df2).mark_bar().encode(
 )
 st.altair_chart(c, use_container_width=True)
 
+main_df = pd.read_csv("combined.csv")
 st.markdown('### Scatter Plots')
-columns_scatter_x = st.multiselect("Columns for the X axis:", options=df.columns.values, default=None)
-columns_scatter_y = st.multiselect("Columns for the Y axis:", options=df.columns.values, default=None)
+columns_scatter_x = st.multiselect("Columns for the X axis:", options=main_df.columns.values, default=None)
+columns_scatter_y = st.multiselect("Columns for the Y axis:", options=main_df.columns.values, default=None)
 if columns_scatter_x:
     if columns_scatter_y:
         for x_axis in columns_scatter_x:
             for y_axis in columns_scatter_y:
                 fig = plt.figure(figsize=(20, 6))
-                ax = sns.scatterplot(x=df[x_axis], y=df[y_axis])
+                ax = sns.scatterplot(x=main_df[x_axis], y=main_df[y_axis])
                 ax.set_title("Churn Relationship")
                 ax.set_ylabel(y_axis.capitalize())
                 ax.set_xlabel(x_axis.capitalize())
                 st.pyplot(fig)
 
 st.markdown('### Correlations heat map')
-corrMatrix = logisticReg("combined.csv")
-fig = plt.figure(figsize=(20, 6))
+corrMatrix = main_df.corr()
+fig = plt.figure(figsize=(30, 10))
 ax = sns.heatmap(corrMatrix, annot=True)
 ax.set_title('Heat map of correlations of variables')
 st.pyplot(fig)
 
 st.markdown('### Logistic Regression Plots')
-binary_columns = [c for c in df.columns.values if sorted(list(df[c].value_counts().index)) == ([0, 1])]
-columns_regression_x = st.multiselect('Columns for the X axis: ', df.columns.values, default=None)
+binary_columns = [c for c in main_df.columns.values if sorted(list(main_df[c].value_counts().index)) == ([0, 1])]
+columns_regression_x = st.multiselect('Columns for the X axis: ', main_df.columns.values, default=None)
 columns_regression_y = st.multiselect('Columns for the Y axis: ', binary_columns, default=None)
 if columns_regression_x:
     if columns_regression_y:
         for x_axis in columns_regression_x:
             for y_axis in columns_regression_y:
                 fig = plt.figure(figsize=(20, 6))
-                ax = sns.regplot(x=df[x_axis], y=df[y_axis], logistic=True, ci=0, line_kws={"color": "red"})
+                ax = sns.regplot(x=main_df[x_axis], y=main_df[y_axis], logistic=True, ci=0, line_kws={"color": "red"})
                 ax.set_title("Logistic Regression Plot")
                 ax.set_ylabel(y_axis.capitalize())
                 ax.set_xlabel(x_axis.capitalize())
                 st.pyplot(fig)
 
 st.markdown('### Classification Report')
-finalReport = classReport.get_report()
+finalReport = logisticReg("combined.csv")
 st.dataframe(finalReport)             
 
              
