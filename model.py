@@ -4,20 +4,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_curve, roc_auc_score, classification_report, accuracy_score, confusion_matrix
 import pandas as pd
 
-class report:
-
-    def __init__(self, report = NULL):
-        self._report = report
-
-    def get_report(self):
-        return self._report
-
-    def set_report(self, report):
-        self._report = report
-
-classReport = report()       
-
-
 def logisticReg(file):
     data = pd.read_csv(file)
     y = data["Churn"]
@@ -30,7 +16,5 @@ def logisticReg(file):
     print(y_prediction)
     print(classification_report(y_test, y_prediction, digits=6))
     report = pd.DataFrame(classification_report(y_test, y_prediction, digits=6, output_dict=True)).transpose()
-    classReport.set_report(report)
     print(confusion_matrix(y_test, y_prediction))
-    df3 = pd.DataFrame(confusion_matrix(y_test, y_prediction))
-    return df3
+    return report
