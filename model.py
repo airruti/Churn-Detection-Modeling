@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_curve, roc_auc_score, classification_report, accuracy_score, confusion_matrix
