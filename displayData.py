@@ -95,11 +95,22 @@ if columns_regression_x:
                 ax.set_xlabel(x_axis.capitalize())
                 st.pyplot(fig)
 
+
+def main(): page = st.sidebar.selectbox("Select a Page",["Violin & Strip Plot"])
+st.markdown('### Violin & Strip Plot')
+sd = st.selectbox("Select a Plot",["Violin Plot","Strip Plot"])
+fig = plt.figure(figsize=(24,8))
+if sd == "Violin Plot":
+    sns.violinplot(x="Owner AMA / AUM", y="# of Closed Won Opportunities", data=df)
+elif sd == "Strip Plot":
+    sns.stripplot(x="Owner AMA / AUM", y="# of Closed Won Opportunities", data=df)
+st.pyplot(fig)
+
 st.markdown('### Classification Report')
 finalReport = logisticReg("combined.csv")
-st.dataframe(finalReport)             
+st.dataframe(finalReport)
 
-             
+
 
 # For reference for interactive heatmap
 # heatmap = alt.Chart(df3).mark_rect().encode(
