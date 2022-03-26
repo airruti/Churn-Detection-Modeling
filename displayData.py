@@ -11,7 +11,7 @@ st.set_page_config(page_title="Churn Detection Modeling",
                    page_icon=":bar_chart:",
                    layout="wide")
 
-df = pd.read_csv('display.csv', nrows=1000)
+df = pd.read_csv('display.csv')
 # df.drop(columns="Unnamed: 0", inplace=True)
 
 # SIDEBAR
@@ -35,7 +35,7 @@ df = pd.read_csv('display.csv', nrows=1000)
 # main body
 st.header("Churn Detection Modeling")
 st.selectbox("Charts", ["Churn model", "Churn factors"])
-st.dataframe(df)
+#st.dataframe(df)
 chart_data = df['Churn'].value_counts()
 
 st.markdown('### Bar Graph')

@@ -13,7 +13,7 @@ def logisticReg(file):
     oversample = SMOTE()
     x, y = oversample.fit_resample(x, y)
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=.7)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=.9)
 
     model = LogisticRegression()
     print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
@@ -25,5 +25,3 @@ def logisticReg(file):
     report = pd.DataFrame(classification_report(y_test, y_prediction, digits=6, output_dict=True)).transpose()
     print(confusion_matrix(y_test, y_prediction))
     return report
-
-logisticReg("combined.csv")
