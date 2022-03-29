@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 import altair as alt
 from model import logisticReg
-from model import classReport
+# from model import classReport
 import seaborn as sns
 from matplotlib import pyplot as plt
 
@@ -15,22 +15,16 @@ st.set_page_config(page_title="Churn Detection Modeling",
 df = pd.read_csv('display.csv', nrows=1000)
 #df.drop(columns="Unnamed: 0", inplace=True)
 
-# # SIDEBAR
-# st.sidebar.header("Filters:")
-# region = st.sidebar.multiselect(
-#     "Select the region:",
-#     options=df['region'].unique(),
-#     default=df['region'].unique()
-# )
-# st.sidebar.caption("The regions consists of North America(NAM), APAC(AU), and Europe(EU)")
-# ownerType = st.sidebar.multiselect(
-#     "Select the owner type:",
-#     options=df['Owner AMA / AUM'].unique(),
-#     default=df['Owner AMA / AUM'].unique()
-# )
-# df = df.query(
-#     "region == @region & `Owner AMA / AUM` == @ownerType"
-# )
+# SIDEBAR
+st.sidebar.header("Filters:")
+recordType = st.sidebar.multiselect(
+    "Select the Account Record Type:",
+    options=df['Account Record Type'].unique(),
+    default=df['Account Record Type'].unique()
+)
+df = df.query(
+    "`Account Record Type` == @recordType"
+)
 
 # main body
 st.header("Churn Detection Modeling")
@@ -59,8 +53,9 @@ c = alt.Chart(df2).mark_bar().encode(
 st.altair_chart(c, use_container_width=True)
 
 st.markdown('### Scatter Plots')
-columns_scatter_x = st.multiselect("Columns for the X axis:", options=df.columns.values, default=None)
-columns_scatter_y = st.multiselect("Columns for the Y axis:", options=df.columns.values, default=None)
+st.sidebar.header('Scatter Plot Filter')
+columns_scatter_x = st.sidebar.multiselect("Columns for the X axis:", options=df.columns.values, default=None)
+columns_scatter_y = st.sidebar.multiselect("Columns for the Y axis:", options=df.columns.values, default=None)
 if columns_scatter_x:
     if columns_scatter_y:
         for x_axis in columns_scatter_x:
@@ -80,9 +75,10 @@ ax.set_title('Heat map of correlations of variables')
 st.pyplot(fig)
 
 st.markdown('### Logistic Regression Plots')
+st.sidebar.header('Scatter Plot Filter')
 binary_columns = [c for c in df.columns.values if sorted(list(df[c].value_counts().index)) == ([0, 1])]
-columns_regression_x = st.multiselect('Columns for the X axis: ', df.columns.values, default=None)
-columns_regression_y = st.multiselect('Columns for the Y axis: ', binary_columns, default=None)
+columns_regression_x = st.sidebar.multiselect('Columns for the X axis: ', df.columns.values, default=None)
+columns_regression_y = st.sidebar.multiselect('Columns for the Y axis: ', binary_columns, default=None)
 if columns_regression_x:
     if columns_regression_y:
         for x_axis in columns_regression_x:
@@ -95,8 +91,8 @@ if columns_regression_x:
                 st.pyplot(fig)
 
 st.markdown('### Classification Report')
-finalReport = classReport.get_report()
-st.dataframe(finalReport)             
+# finalReport = classReport.get_report()
+# st.dataframe(finalReport)             
 
              
 
