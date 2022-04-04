@@ -35,28 +35,43 @@ df = pd.read_csv('display.csv')
 # main body
 st.header("Churn Detection Modeling")
 st.selectbox("Charts", ["Churn model", "Churn factors"])
-#st.dataframe(df)
+st.caption("First five values of the dataframe")
+st.dataframe(df.head())
 chart_data = df['Churn'].value_counts()
 
+# For reference incase we want to change back to interactive bar graph
+# column_names = ['Churn Categories', 'Number of Customers Churned']
+# df2 = pd.DataFrame(columns=column_names)
+# df2 = df2.append({'Churn Categories': 'Churn_No',
+#                  'Number of Customers Churned': chart_data[0]}, ignore_index=True)
+# df2 = df2.append({'Churn Categories': 'Churn_Yes',
+#                  'Number of Customers Churned': chart_data[1]}, ignore_index=True)
+# c = alt.Chart(df2).mark_bar().encode(
+#     alt.X('Churn Categories'),
+#     alt.Y('Number of Customers Churned'),
+#     alt.Color('Churn Categories'),
+#     alt.OpacityValue(0.7),
+#     tooltip=[alt.Tooltip('Churn Categories'),
+#              alt.Tooltip('Number of Customers Churned')]
+# ).interactive().properties(
+#     width=1000,
+#     height=700
+# )
+# st.altair_chart(c, use_container_width=True)
+
 st.markdown('### Bar Graph')
-column_names = ['Churn Categories', 'Number of Customers Churned']
-df2 = pd.DataFrame(columns=column_names)
-df2 = df2.append({'Churn Categories': 'Churn_No',
-                 'Number of Customers Churned': chart_data[0]}, ignore_index=True)
-df2 = df2.append({'Churn Categories': 'Churn_Yes',
-                 'Number of Customers Churned': chart_data[1]}, ignore_index=True)
-c = alt.Chart(df2).mark_bar().encode(
-    alt.X('Churn Categories'),
-    alt.Y('Number of Customers Churned'),
-    alt.Color('Churn Categories'),
-    alt.OpacityValue(0.7),
-    tooltip=[alt.Tooltip('Churn Categories'),
-             alt.Tooltip('Number of Customers Churned')]
-).interactive().properties(
-    width=1000,
-    height=700
-)
-st.altair_chart(c, use_container_width=True)
+column_names = ['Churn_No', 'Churn_Yes']
+df2 = pd.DataFrame(columns = column_names)
+df2 = df2.append({'Churn_No': chart_data[0], 'Churn_Yes': chart_data[1]}, ignore_index=True)
+Churn = list(df2.keys())
+values = list(df2.values[0])
+fig = plt.figure(figsize = (15,5))
+plt.bar(Churn, values, color = ['blue', 'red'])
+plt.xlabel("Churn Detection")
+plt.ylabel("Number of Customers that Churn")
+plt.title("Determines how many customers were churned")
+st.pyplot(fig)
+
 
 main_df = pd.read_csv("combined.csv")
 st.markdown('### Scatter Plots')
