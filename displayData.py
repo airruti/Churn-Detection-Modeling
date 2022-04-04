@@ -4,12 +4,17 @@ import altair as alt
 from model import logisticReg
 import seaborn as sns
 from matplotlib import pyplot as plt
-
+from PIL import Image
 
 # streamlit run displayData.py
 st.set_page_config(page_title="Churn Detection Modeling",
                    page_icon=":bar_chart:",
                    layout="wide")
+
+# Header and churn logo
+st.header("Churn Detection Modeling")
+image = Image.open('churnDetectionLogo.jpeg')
+st.image(image, width=300)
 
 df = pd.read_csv('display.csv')
 # df.drop(columns="Unnamed: 0", inplace=True)
@@ -33,9 +38,8 @@ df = pd.read_csv('display.csv')
 
 
 # main body
-st.header("Churn Detection Modeling")
 st.selectbox("Charts", ["Churn model", "Churn factors"])
-#st.dataframe(df)
+# st.dataframe(df)
 chart_data = df['Churn'].value_counts()
 
 st.markdown('### Bar Graph')
