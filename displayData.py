@@ -4,12 +4,17 @@ import altair as alt
 from model import logisticReg
 import seaborn as sns
 from matplotlib import pyplot as plt
+from PIL import Image
+
 
 
 # streamlit run displayData.py
 st.set_page_config(page_title="Churn Detection Modeling",
-                   page_icon=":bar_chart:",
+                   page_icon=Image.open('churnDetectionLogo.jpeg'),
                    layout="wide")
+
+# image = Image.open('churnDetectionLogo.jpeg')
+# st.image(image, width=50)
 
 df = pd.read_csv('display.csv')
 # df.drop(columns="Unnamed: 0", inplace=True)
@@ -33,31 +38,31 @@ df = pd.read_csv('display.csv')
 
 
 # main body
-st.header("Churn Detection Modeling")
-st.selectbox("Charts", ["Churn model", "Churn factors"])
-st.caption("First five values of the dataframe")
-st.dataframe(df.head())
+# st.header("Churn Detection Modeling")
+# st.selectbox("Charts", ["Churn model", "Churn factors"])
+# st.caption("First five values of the dataframe")
+# st.dataframe(df.head())
 chart_data = df['Churn'].value_counts()
 
 # For reference incase we want to change back to interactive bar graph
-# column_names = ['Churn Categories', 'Number of Customers Churned']
-# df2 = pd.DataFrame(columns=column_names)
-# df2 = df2.append({'Churn Categories': 'Churn_No',
-#                  'Number of Customers Churned': chart_data[0]}, ignore_index=True)
-# df2 = df2.append({'Churn Categories': 'Churn_Yes',
-#                  'Number of Customers Churned': chart_data[1]}, ignore_index=True)
-# c = alt.Chart(df2).mark_bar().encode(
-#     alt.X('Churn Categories'),
-#     alt.Y('Number of Customers Churned'),
-#     alt.Color('Churn Categories'),
-#     alt.OpacityValue(0.7),
-#     tooltip=[alt.Tooltip('Churn Categories'),
-#              alt.Tooltip('Number of Customers Churned')]
-# ).interactive().properties(
-#     width=1000,
-#     height=700
-# )
-# st.altair_chart(c, use_container_width=True)
+column_names = ['Churn Categories', 'Number of Customers Churned']
+df2 = pd.DataFrame(columns=column_names)
+df2 = df2.append({'Churn Categories': 'Churn_No',
+                 'Number of Customers Churned': chart_data[0]}, ignore_index=True)
+df2 = df2.append({'Churn Categories': 'Churn_Yes',
+                 'Number of Customers Churned': chart_data[1]}, ignore_index=True)
+c = alt.Chart(df2).mark_bar().encode(
+    alt.X('Churn Categories'),
+    alt.Y('Number of Customers Churned'),
+    alt.Color('Churn Categories'),
+    alt.OpacityValue(0.7),
+    tooltip=[alt.Tooltip('Churn Categories'),
+             alt.Tooltip('Number of Customers Churned')]
+).interactive().properties(
+    width=1000,
+    height=700
+)
+st.altair_chart(c, use_container_width=True)
 
 st.markdown('### Bar Graph')
 column_names = ['Churn_No', 'Churn_Yes']

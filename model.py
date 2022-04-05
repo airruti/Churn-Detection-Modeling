@@ -25,3 +25,5 @@ def logisticReg(file):
     report = pd.DataFrame(classification_report(y_test, y_prediction, digits=6, output_dict=True)).transpose()
     print(confusion_matrix(y_test, y_prediction))
     return report
+
+logisticReg("combined.csv")
