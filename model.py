@@ -16,12 +16,14 @@ def logisticReg(file):
     x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=.9)
 
     model = LogisticRegression()
+    print('train and test shapes:')
     print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
     model.fit(x_train, y_train)
 
     y_prediction = model.predict(x_test)
+    print('y_prediction:')
     print(y_prediction)
-    print(classification_report(y_test, y_prediction, digits=6))
+    print('Classification Report: \n', classification_report(y_test, y_prediction, digits=6))
     report = pd.DataFrame(classification_report(y_test, y_prediction, digits=6, output_dict=True)).transpose()
-    print(confusion_matrix(y_test, y_prediction))
+    print('Confusion Matrix: \n', confusion_matrix(y_test, y_prediction))
     return report
