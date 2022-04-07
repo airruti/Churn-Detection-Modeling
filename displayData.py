@@ -4,12 +4,17 @@ import altair as alt
 from model import logisticReg
 import seaborn as sns
 from matplotlib import pyplot as plt
+from PIL import Image
+
 
 
 # streamlit run displayData.py
 st.set_page_config(page_title="Churn Detection Modeling",
-                   page_icon=":bar_chart:",
+                   page_icon=Image.open('churnDetectionLogo.jpeg'),
                    layout="wide")
+
+# image = Image.open('churnDetectionLogo.jpeg')
+# st.image(image, width=50)
 
 df = pd.read_csv('display.csv')
 # df.drop(columns="Unnamed: 0", inplace=True)
@@ -35,9 +40,11 @@ df = pd.read_csv('display.csv')
 # main body
 st.header("Churn Detection Modeling")
 st.selectbox("Charts", ["Churn model", "Churn factors"])
-#st.dataframe(df)
+st.caption("First five values of the dataframe")
+st.dataframe(df.head())
 chart_data = df['Churn'].value_counts()
 
+# For reference incase we want to change back to interactive bar graph
 st.markdown('### Bar Graph')
 column_names = ['Churn Categories', 'Number of Customers Churned']
 df2 = pd.DataFrame(columns=column_names)
@@ -52,11 +59,25 @@ c = alt.Chart(df2).mark_bar().encode(
     alt.OpacityValue(0.7),
     tooltip=[alt.Tooltip('Churn Categories'),
              alt.Tooltip('Number of Customers Churned')]
-).interactive().properties(
+).properties(
     width=1000,
     height=700
 )
 st.altair_chart(c, use_container_width=True)
+
+# For reference incase we want to switch back to matplotlib
+# column_names = ['Churn_No', 'Churn_Yes']
+# df2 = pd.DataFrame(columns = column_names)
+# df2 = df2.append({'Churn_No': chart_data[0], 'Churn_Yes': chart_data[1]}, ignore_index=True)
+# Churn = list(df2.keys())
+# values = list(df2.values[0])
+# fig = plt.figure(figsize = (15,5))
+# plt.bar(Churn, values, color = ['blue', 'red'])
+# plt.xlabel("Churn Detection")
+# plt.ylabel("Number of Customers that Churn")
+# plt.title("Determines how many customers were churned")
+# st.pyplot(fig)
+
 
 main_df = pd.read_csv("combined.csv")
 st.markdown('### Scatter Plots')
@@ -81,9 +102,9 @@ ax.set_title('Heat map of correlations of variables')
 st.pyplot(fig)
 
 st.markdown('### Logistic Regression Plots')
-binary_columns = [c for c in main_df.columns.values if sorted(list(main_df[c].value_counts().index)) == ([0, 1])]
-columns_regression_x = st.multiselect('Columns for the X axis: ', main_df.columns.values, default=None)
-columns_regression_y = st.multiselect('Columns for the Y axis: ', binary_columns, default=None)
+# binary_columns = [c for c in main_df.columns.values if sorted(list(main_df[c].value_counts().index)) == ([0, 1])]
+columns_regression_x = st.multiselect('Columns for the X axis: ', main_df['Duration'].values, default=None)
+columns_regression_y = st.multiselect('churn?: ', ['churned', 'not churned'], default=None)
 if columns_regression_x:
     if columns_regression_y:
         for x_axis in columns_regression_x:
