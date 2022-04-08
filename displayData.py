@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import altair as alt
-from model import logistic_reg
+import model
 import seaborn as sns
 from matplotlib import pyplot as plt
 from PIL import Image
@@ -118,7 +118,7 @@ if columns_regression_x:
                 st.pyplot(fig)
 
 st.markdown('### Classification Report')
-finalReport = logistic_reg("combined.csv")
+finalReport = model.logistic_reg("combined.csv")
 st.dataframe(finalReport)             
 
              
