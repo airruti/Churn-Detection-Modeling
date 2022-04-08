@@ -15,6 +15,10 @@ combined_df = temp_df.merge(product_data_df, left_on='JUNO Account ID', right_on
 account_currency_map = {'USD': 'NAM', 'CAD': 'NAM', 'EUR': 'EU', 'GBP': 'EU', 'AUD': 'AU', 'NZD': 'AU', 'ZAR': 'SA'}
 combined_df['Account Currency'] = combined_df['Account Currency'].map(account_currency_map)
 
+#remove invalid durations due to faulty data
+combined_df = combined_df[combined_df['Duration'] != '#NUM!']
+combined_df = combined_df[combined_df['Duration'] < '44602']
+
 #csv for diplaydata for UI
 combined_df.to_csv("display.csv", index=False)
 
@@ -31,8 +35,7 @@ combined_df.drop(columns=drop, inplace=True)
 #make indicator variables
 combined_df = pd.get_dummies(combined_df, columns=["Kaseya Market Segment", "Account Currency"])
 
-#remove invalid durations due to faulty data
-combined_df = combined_df[combined_df['Duration'] != '#NUM!']
+#remove empty rows
 combined_df = combined_df.dropna(how='any')
 
 #Make it a CSV
