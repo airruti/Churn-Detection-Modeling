@@ -1,10 +1,11 @@
 import pandas as pd
 import streamlit as st
 import altair as alt
-from model import logisticReg
+from model import logistic_reg
 import seaborn as sns
 from matplotlib import pyplot as plt
 from PIL import Image
+import statsmodels
 
 
 
@@ -79,7 +80,7 @@ st.altair_chart(c, use_container_width=True)
 # st.pyplot(fig)
 
 
-main_df = pd.read_csv("combined.csv")
+main_df = pd.read_csv("combined.csv", low_memory=False)
 st.markdown('### Scatter Plots')
 columns_scatter_x = st.multiselect("Columns for the X axis:", options=main_df.columns.values, default=None)
 columns_scatter_y = st.multiselect("Columns for the Y axis:", options=main_df.columns.values, default=None)
@@ -103,8 +104,8 @@ st.pyplot(fig)
 
 st.markdown('### Logistic Regression Plots')
 binary_columns = [c for c in main_df.columns.values if sorted(list(main_df[c].value_counts().index)) == ([0, 1])]
-columns_regression_x = st.multiselect('Columns for the X axis: ', main_df.columns.values, default=None)
-columns_regression_y = st.multiselect('Columns for the Y axis: ', binary_columns, default=None)
+columns_regression_x = st.multiselect('Columns for the Y axis (dependent var): ', main_df.columns.values, default=None)
+columns_regression_y = st.multiselect('Columns for the X axis (independent vars): ', binary_columns, default=None)
 if columns_regression_x:
     if columns_regression_y:
         for x_axis in columns_regression_x:
@@ -117,7 +118,7 @@ if columns_regression_x:
                 st.pyplot(fig)
 
 st.markdown('### Classification Report')
-finalReport = logisticReg("combined.csv")
+finalReport = logistic_reg("combined.csv")
 st.dataframe(finalReport)             
 
              
