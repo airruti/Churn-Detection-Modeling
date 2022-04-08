@@ -54,10 +54,12 @@ def logistic_reg(file):
     x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=.8)
 
     model = LogisticRegression()
+    print('train and test shapes:')
     print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
     model.fit(x_train, y_train)
 
     y_prediction = model.predict(x_test)
+    print('y_prediction:')
     print(y_prediction)
     print()
     # score = roc_auc_score(y_test, y_prediction)
