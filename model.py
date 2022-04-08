@@ -14,7 +14,7 @@ def k_fold(file):
     oversample = SMOTE()
     x, y = oversample.fit_resample(x, y)
 
-    kf = StratifiedKFold(n_splits =10, shuffle=True)
+    kf = StratifiedKFold(n_splits =10, shuffle=True, random_state=45)
 
     i = 1
     for train_index, test_index in kf.split(x, y):
