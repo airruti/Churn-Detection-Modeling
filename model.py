@@ -14,7 +14,7 @@ def k_fold(file):
     oversample = SMOTE()
     x, y = oversample.fit_resample(x, y)
 
-    kf = StratifiedKFold(n_splits =5, shuffle=True)
+    kf = StratifiedKFold(n_splits =10, shuffle=True)
 
     i = 1
     for train_index, test_index in kf.split(x, y):
@@ -22,7 +22,7 @@ def k_fold(file):
         x_train, x_test = x.loc[train_index], x.loc[test_index]
         y_train, y_test = y.loc[train_index], y.loc[test_index]
 
-        model = LogisticRegression()
+        model = LogisticRegression(max_iter=1000)
         print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
         model.fit(x_train, y_train)
 
@@ -36,6 +36,7 @@ def k_fold(file):
         #print(classification_report(y_test, y_prediction, digits=6))
         report = pd.DataFrame(classification_report(y_test, y_prediction, digits=6, output_dict=True)).transpose()
         print(confusion_matrix(y_test, y_prediction))
+        print()
         i += 1
     avg = sum(scores)/len(scores)
 
