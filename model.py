@@ -37,12 +37,9 @@ def k_fold(file):
         report = pd.DataFrame(classification_report(y_test, y_prediction, digits=6, output_dict=True)).transpose()
         print(confusion_matrix(y_test, y_prediction))
         i += 1
-    avg = 0
-    for i in scores:
-        avg += i
-    avg = avg/len(scores) 
+    avg = sum(scores)/len(scores)
 
-    print(avg)
+    print('Average ROC AUC Score: ', avg)
 
     return report
 
