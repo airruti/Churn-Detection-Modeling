@@ -17,7 +17,7 @@ st.set_page_config(page_title="Churn Detection Modeling",
 # image = Image.open('churnDetectionLogo.jpeg')
 # st.image(image, width=50)
 
-df = pd.read_csv('display.csv')
+#df = pd.read_csv('combined.csv', low_memory=False)
 # df.drop(columns="Unnamed: 0", inplace=True)
 
 # SIDEBAR
@@ -37,13 +37,13 @@ df = pd.read_csv('display.csv')
 #     "region == @region & `Owner AMA / AUM` == @ownerType"
 # )
 
-
+main_df = pd.read_csv("combined.csv", low_memory=False)
 # main body
 st.header("Churn Detection Modeling")
 st.selectbox("Charts", ["Churn model", "Churn factors"])
 st.caption("First five values of the dataframe")
-st.dataframe(df.head())
-chart_data = df['Churn'].value_counts()
+st.dataframe(main_df.head())
+chart_data = main_df['Churn'].value_counts()
 
 # For reference incase we want to change back to interactive bar graph
 st.markdown('### Bar Graph')
@@ -80,7 +80,7 @@ st.altair_chart(c, use_container_width=True)
 # st.pyplot(fig)
 
 
-main_df = pd.read_csv("combined.csv", low_memory=False)
+
 st.markdown('### Scatter Plots')
 columns_scatter_x = st.multiselect("Columns for the X axis:", options=main_df.columns.values, default=None)
 columns_scatter_y = st.multiselect("Columns for the Y axis:", options=main_df.columns.values, default=None)
@@ -118,7 +118,7 @@ if columns_regression_x:
                 st.pyplot(fig)
 
 st.markdown('### Classification Report')
-finalReport = model.logistic_reg("combined.csv")
+finalReport = model.k_fold("combined.csv")
 st.dataframe(finalReport)             
 
              
