@@ -7,11 +7,11 @@ from imblearn.over_sampling import SMOTE
 
 def k_fold(file):
     data = pd.read_csv(file)
-    drops = ["Churn", "Kaseya Market Segment_- None -", "Kaseya Market Segment_Channel", "Kaseya Market Segment_Education",
+    drops = ["Churn", "Kaseya Market Segment_- None -",
      "Kaseya Market Segment_End User", "Kaseya Market Segment_Financial Services", "Kaseya Market Segment_General Business",
       "Kaseya Market Segment_Government", "Kaseya Market Segment_Healthcare", "Kaseya Market Segment_Hospitality",
        "Kaseya Market Segment_Retail", "Kaseya Market Segment_Software Vendor", "Account Currency_AU",
-        "Account Currency_EU", "Account Currency_SA"]
+        "Account Currency_EU", "Account Currency_SA", "Account Currency_NAM", "Duration", "reputation_to_date", "Connect 2019"]
     y = data["Churn"]
     x = data.drop(columns=drops)
     scores = []
