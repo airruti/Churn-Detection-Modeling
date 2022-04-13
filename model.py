@@ -28,12 +28,11 @@ def k_fold(file):
         y_train, y_test = y.loc[train_index], y.loc[test_index]
 
         model = LogisticRegression(max_iter=1000)
-        print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
+        print("Shape: ", x_train.shape, x_test.shape, y_train.shape, y_test.shape)
         model.fit(x_train, y_train)
 
         y_prediction = model.predict(x_test)
-        print(y_prediction)
-        print()
+        print("Prediction: ", y_prediction)
         score = roc_auc_score(y_test, y_prediction)
         scores.append(score)
         # print('ROC AUC score: ', score)
@@ -44,7 +43,7 @@ def k_fold(file):
         print()
         i += 1
     avg = sum(scores)/len(scores)
-
+    print(classification_report(y_test, y_prediction, digits=6))
     print('Average ROC AUC Score: ', avg)
     print("Precision: " ,precision_score(y_true=y_test, y_pred=y_prediction, average="binary"))
 
@@ -77,3 +76,4 @@ def logistic_reg(file):
     
 
     return report
+k_fold("combined.csv")
