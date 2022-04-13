@@ -1,7 +1,7 @@
 from prometheus_client import Counter
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, StratifiedKFold
-from sklearn.metrics import roc_curve, roc_auc_score, classification_report, accuracy_score, confusion_matrix
+from sklearn.metrics import precision_score, roc_curve, roc_auc_score, classification_report, accuracy_score, confusion_matrix
 import pandas as pd
 from imblearn.over_sampling import SMOTE
 
@@ -46,6 +46,7 @@ def k_fold(file):
     avg = sum(scores)/len(scores)
 
     print('Average ROC AUC Score: ', avg)
+    print("Precision: " ,precision_score(y_true=y_test, y_pred=y_prediction, average="binary"))
 
     return report
 
@@ -73,5 +74,6 @@ def logistic_reg(file):
     print(classification_report(y_test, y_prediction, digits=6))
     report = pd.DataFrame(classification_report(y_test, y_prediction, digits=6, output_dict=True)).transpose()
     print(confusion_matrix(y_test, y_prediction))
+    
 
     return report
