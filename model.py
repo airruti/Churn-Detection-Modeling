@@ -76,4 +76,25 @@ def logistic_reg(file):
     
 
     return report
-k_fold("combined.csv")
+
+def test(file):
+    data = pd.read_csv(file)
+    drops = ["Churn", "Kaseya Market Segment_- None -",
+     "Kaseya Market Segment_End User", "Kaseya Market Segment_Financial Services", "Kaseya Market Segment_General Business",
+      "Kaseya Market Segment_Government", "Kaseya Market Segment_Healthcare", "Kaseya Market Segment_Hospitality",
+       "Kaseya Market Segment_Retail", "Kaseya Market Segment_Software Vendor", "Account Currency_AU",
+        "Account Currency_SA", "reputation_to_date", "Connect 2019"]
+    y = data["Churn"]
+    x = data.drop(columns=drops)
+
+    from sklearn.ensemble import ExtraTreesClassifier
+    import matplotlib.pyplot as plt
+    model = ExtraTreesClassifier()
+    model.fit(x,y)
+    print(model.feature_importances_)
+    feat_importances = pd.Series(model.feature_importances_,index =x.columns)
+    feat_importances.nlargest(10).plot(kind = 'barh')
+    plt.show()
+
+#k_fold("combined.csv")
+test("combined.csv")

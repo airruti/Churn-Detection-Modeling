@@ -121,8 +121,6 @@ st.markdown('### Classification Report')
 finalReport = model.k_fold("combined.csv")
 st.dataframe(finalReport)             
 
-             
-
 # For reference for interactive heatmap
 # heatmap = alt.Chart(df3).mark_rect().encode(
 #      alt.X('Var1:O', title = ''),
