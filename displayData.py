@@ -1,11 +1,14 @@
 import pandas as pd
 import streamlit as st
 import altair as alt
+from sympy import S
 import model
 import seaborn as sns
 from matplotlib import pyplot as plt
 from PIL import Image
 import statsmodels
+from sklearn.ensemble import ExtraTreesClassifier
+
 
 
 
@@ -102,24 +105,60 @@ ax = sns.heatmap(corrMatrix, annot=True)
 ax.set_title('Heat map of correlations of variables')
 st.pyplot(fig)
 
-st.markdown('### Logistic Regression Plots')
-binary_columns = [c for c in main_df.columns.values if sorted(list(main_df[c].value_counts().index)) == ([0, 1])]
-columns_regression_x = st.multiselect('Columns for the Y axis (dependent var): ', main_df.columns.values, default=None)
-columns_regression_y = st.multiselect('Columns for the X axis (independent vars): ', binary_columns, default=None)
-if columns_regression_x:
-    if columns_regression_y:
-        for x_axis in columns_regression_x:
-            for y_axis in columns_regression_y:
-                fig = plt.figure(figsize=(20, 6))
-                ax = sns.regplot(x=main_df[x_axis], y=main_df[y_axis], logistic=True, ci=0, line_kws={"color": "red"})
-                ax.set_title("Logistic Regression Plot")
-                ax.set_ylabel(y_axis.capitalize())
-                ax.set_xlabel(x_axis.capitalize())
-                st.pyplot(fig)
+# st.markdown('### Logistic Regression Plots')
+# binary_columns = [c for c in main_df.columns.values if sorted(list(main_df[c].value_counts().index)) == ([0, 1])]
+# columns_regression_x = st.multiselect('Columns for the Y axis (dependent var): ', main_df.columns.values, default=None)
+# columns_regression_y = st.multiselect('Columns for the X axis (independent vars): ', binary_columns, default=None)
+# if columns_regression_x:
+#     if columns_regression_y:
+#         for x_axis in columns_regression_x:
+#             for y_axis in columns_regression_y:
+#                 fig = plt.figure(figsize=(20, 6))
+#                 ax = sns.regplot(x=main_df[x_axis], y=main_df[y_axis], logistic=True, ci=0, line_kws={"color": "red"})
+#                 ax.set_title("Logistic Regression Plot")
+#                 ax.set_ylabel(y_axis.capitalize())
+#                 ax.set_xlabel(x_axis.capitalize())
+#                 st.pyplot(fig)
 
-st.markdown('### Classification Report')
-finalReport = model.k_fold("combined.csv")
-st.dataframe(finalReport)             
+# st.markdown('### Feature Importance Graph')
+# feature_importances = model.feature_imp("combined.csv").nlargest(10)
+# my_colors= ['red', 'grey', 'blue', 'magenta', 'orange', 'green', 'purple', 'black']
+# feature_importances.plot.barh(figsize = (30, 10), color = my_colors)
+# plt.show()
+
+st.markdown('### Feature Importance Graph')
+data = pd.read_csv("combined.csv")
+drops = ["Churn", "Kaseya Market Segment_- None -",
+        "Kaseya Market Segment_End User", "Kaseya Market Segment_Financial Services", "Kaseya Market Segment_General Business",
+        "Kaseya Market Segment_Government", "Kaseya Market Segment_Healthcare", "Kaseya Market Segment_Hospitality",
+        "Kaseya Market Segment_Retail", "Kaseya Market Segment_Software Vendor", "Account Currency_AU",
+        "Account Currency_SA", "reputation_to_date", "Connect 2019"]
+y = data["Churn"]
+x = data.drop(columns=drops)
+s = ExtraTreesClassifier()
+s.fit(x,y)
+feature_importance = pd.Series(s.feature_importances_,index =x.columns)
+my_colors= ['red', 'grey', 'blue', 'magenta', 'orange', 'green', 'purple', 'black']
+fig = plt.subplots()
+st.pyplot(feature_importance.plot.barh(color = my_colors, figsize = (15, 10)).figure)
+
+
+report = model.k_fold("combined.csv")
+
+st.markdown('### Confusion Matrix')
+cf_matrix = report[1]
+fig, ax = plt.subplots(figsize=(20,8))
+ax = sns.heatmap(cf_matrix, annot=True, cmap='Blues')
+ax.set_xlabel('\nPredicted Values')
+ax.set_ylabel('Actual Values ')
+ax.xaxis.set_ticklabels(['False','True'])
+ax.yaxis.set_ticklabels(['False','True'])
+st.pyplot(fig)
+
+# st.markdown('### Classification Report')
+# finalReport = report[0]
+# st.dataframe(finalReport)      
+
 
 # For reference for interactive heatmap
 # heatmap = alt.Chart(df3).mark_rect().encode(
