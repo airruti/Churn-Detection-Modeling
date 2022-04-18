@@ -135,9 +135,9 @@ st.pyplot(fig)
 st.markdown('### Feature Importance Graph')
 one = pd.read_csv("combined.csv")
 drops = ["Churn", "Kaseya Market Segment_- None -",
-        "Kaseya Market Segment_End User", "Kaseya Market Segment_Financial Services", "Kaseya Market Segment_General Business",
-        "Kaseya Market Segment_Government", "Kaseya Market Segment_Healthcare", "Kaseya Market Segment_Hospitality",
-        "Kaseya Market Segment_Retail", "Kaseya Market Segment_Software Vendor", "Account Currency_AU",
+     "Kaseya Market Segment_End User", "Kaseya Market Segment_Financial Services", "Kaseya Market Segment_General Business",
+      "Kaseya Market Segment_Government", "Kaseya Market Segment_Healthcare", "Kaseya Market Segment_Hospitality",
+       "Kaseya Market Segment_Retail", "Kaseya Market Segment_Software Vendor", "Account Currency_AU",
         "Account Currency_SA", "reputation_to_date", "Connect 2019"]
 y = one["Churn"]
 x = one.drop(columns=drops)
@@ -154,16 +154,16 @@ two = model.k_fold("combined.csv")
 st.markdown('### Confusion Matrix')
 cf_matrix = two[1]
 fig, ax = plt.subplots(figsize=(20,8))
-ax = sns.heatmap(cf_matrix, annot=True, cmap='Blues')
+ax = sns.heatmap(cf_matrix, annot=True, cmap='Blues', square=True)
 ax.set_xlabel('\nPredicted Values')
 ax.set_ylabel('Actual Values ')
 ax.xaxis.set_ticklabels(['False','True'])
 ax.yaxis.set_ticklabels(['False','True'])
 st.pyplot(fig)
 
-# st.markdown('### Classification Report')
-# finalReport = report[0]
-# st.dataframe(finalReport)      
+st.markdown('### Classification Report')
+finalReport = two[0]
+st.dataframe(finalReport)      
 
 
 # For reference for interactive heatmap
