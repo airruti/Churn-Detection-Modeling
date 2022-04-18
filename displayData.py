@@ -41,6 +41,12 @@ st.set_page_config(page_title="Churn Detection Modeling",
 # )
 
 main_df = pd.read_csv("combined.csv", low_memory=False)
+drops = ["Kaseya Market Segment_- None -",
+     "Kaseya Market Segment_End User", "Kaseya Market Segment_Financial Services", "Kaseya Market Segment_General Business",
+      "Kaseya Market Segment_Government", "Kaseya Market Segment_Healthcare", "Kaseya Market Segment_Hospitality",
+       "Kaseya Market Segment_Retail", "Kaseya Market Segment_Software Vendor", "Account Currency_AU",
+        "Account Currency_SA", "reputation_to_date", "Connect 2019"]
+main_df = main_df.drop(columns=drops)
 # main body
 st.header("Churn Detection Modeling")
 st.selectbox("Charts", ["Churn model", "Churn factors"])
@@ -127,14 +133,14 @@ st.pyplot(fig)
 # plt.show()
 
 st.markdown('### Feature Importance Graph')
-data = pd.read_csv("combined.csv")
+one = pd.read_csv("combined.csv")
 drops = ["Churn", "Kaseya Market Segment_- None -",
         "Kaseya Market Segment_End User", "Kaseya Market Segment_Financial Services", "Kaseya Market Segment_General Business",
         "Kaseya Market Segment_Government", "Kaseya Market Segment_Healthcare", "Kaseya Market Segment_Hospitality",
         "Kaseya Market Segment_Retail", "Kaseya Market Segment_Software Vendor", "Account Currency_AU",
         "Account Currency_SA", "reputation_to_date", "Connect 2019"]
-y = data["Churn"]
-x = data.drop(columns=drops)
+y = one["Churn"]
+x = one.drop(columns=drops)
 s = ExtraTreesClassifier()
 s.fit(x,y)
 feature_importance = pd.Series(s.feature_importances_,index =x.columns)
@@ -143,10 +149,10 @@ fig = plt.subplots()
 st.pyplot(feature_importance.plot.barh(color = my_colors, figsize = (15, 10)).figure)
 
 
-report = model.k_fold("combined.csv")
+two = model.k_fold("combined.csv")
 
 st.markdown('### Confusion Matrix')
-cf_matrix = report[1]
+cf_matrix = two[1]
 fig, ax = plt.subplots(figsize=(20,8))
 ax = sns.heatmap(cf_matrix, annot=True, cmap='Blues')
 ax.set_xlabel('\nPredicted Values')

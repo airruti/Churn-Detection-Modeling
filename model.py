@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from prometheus_client import Counter
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, StratifiedKFold
@@ -23,7 +22,7 @@ def k_fold(file):
     x, y = oversample.fit_resample(x, y)
 
     kf = StratifiedKFold(n_splits =5, shuffle=True, random_state=45)
-    conf_matrix = NULL
+    conf_matrix = None
     i = 1
     for train_index, test_index in kf.split(x, y):
         print("{} of KFold {}".format(i, kf.n_splits))
