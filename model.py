@@ -1,4 +1,3 @@
-from prometheus_client import Counter
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.metrics import precision_score, roc_curve, roc_auc_score, classification_report, accuracy_score, confusion_matrix
@@ -51,6 +50,8 @@ def k_fold(file):
     print("Precision: " ,precision_score(y_true=y_test, y_pred=y_prediction, average="binary"))
 
     return [report, conf_matrix]
+
+k_fold("combined.csv")
 
 
 # def feature_imp(file):

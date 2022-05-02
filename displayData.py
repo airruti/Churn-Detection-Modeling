@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 import altair as alt
-from sympy import S
 import model
 import seaborn as sns
 from matplotlib import pyplot as plt
