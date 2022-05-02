@@ -51,7 +51,7 @@ def k_fold(file):
 
     return [report, conf_matrix]
 
-k_fold("combined.csv")
+#k_fold("combined.csv")
 
 
 # def feature_imp(file):
